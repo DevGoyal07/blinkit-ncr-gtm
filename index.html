@@ -25,7 +25,10 @@
   .logo{font-family:"Plus Jakarta Sans";font-weight:800;font-size:26px;letter-spacing:-.03em;line-height:1}
   .logo .b{color:var(--ink)} .logo .it{color:var(--green)}
   .logo-sub{margin-left:2px;padding-left:14px;border-left:1px solid var(--line);color:var(--muted);font-size:12.5px;font-weight:600}
-  .call{margin-left:auto;display:flex;align-items:center;gap:11px}
+  .callwrap{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  .call{display:flex;align-items:center;gap:11px}
+  .byline{font-size:11.5px;font-weight:600;color:var(--muted)}
+  .byline b{color:var(--ink-2);font-weight:700}
   .call .lab{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
   .call .pill{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:7px 14px;border-radius:8px}
   .call .pill .d{width:7px;height:7px;border-radius:50%;background:#9FE6AC}
@@ -110,7 +113,10 @@
     <div class="hbar">
       <span class="logo"><span class="b">blink</span><span class="it">it</span></span>
       <span class="logo-sub">NCR dark-store launch decision</span>
-      <div class="call"><span class="lab">The call</span><span class="pill"><span class="d"></span>Launch · Dwarka Expressway</span></div>
+      <div class="callwrap">
+        <div class="call"><span class="lab">The call</span><span class="pill"><span class="d"></span>Launch · Dwarka Expressway</span></div>
+        <div class="byline">Prepared by <b>Devansh Goel</b> · <b>Kriti Jasuja</b></div>
+      </div>
     </div>
     <div class="tabs">
       <button class="tab active" data-v="overview">Overview</button>
