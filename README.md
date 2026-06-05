@@ -2,11 +2,13 @@
 
 A product-management portfolio project: a go-to-market decision, backed by SQL.
 
+🔗 **Live dashboard:** https://blinkit-ncr-gtm.vercel.app  ·  📊 [Decision deck (PPTX)](Blinkit_NCR_GTM_deck.pptx)
+
+![Blinkit NCR launch-decision dashboard](assets/dashboard.png)
+
 > **The question:** Blinkit already leads Delhi NCR. So on the growth frontier, **which corridor earns the next dark store** — the most incremental, profitable demand we're losing — and where would we only cannibalise ourselves?
 >
 > **The call:** **Launch on Dwarka Expressway / New Gurugram** (opportunity score **95.3 / 100**) — the biggest pocket of unmet, high-value demand on the frontier. Phase Greater Noida West (bigger, but a thin basket and three rivals); densify Indirapuram; decline already-saturated and sub-scale zones.
-
-🔗 **Live dashboard:** _add your Vercel URL here after deploying_
 
 ---
 
