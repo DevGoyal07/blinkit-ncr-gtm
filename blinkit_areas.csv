@@ -1,0 +1,21 @@
+area_name,pincode,zone,est_households,avg_income_index,competitor_count,has_own_store,nearest_store_id,dist_to_nearest_store_km
+Gurugram Cyber City,122002,Gurugram,65000,1.4,4,1,DS01,0.0
+South Delhi (Saket),110017,Delhi,58000,1.4,3,1,DS02,0.0
+Noida Sector 62,201309,Noida,60000,1.2,2,1,DS03,0.0
+Indirapuram,201014,Ghaziabad,80000,1.1,2,1,DS04,0.0
+Dwarka (Delhi),110078,Delhi,70000,1.15,2,1,DS05,0.0
+Vasant Kunj,110070,Delhi,50000,1.35,3,1,DS06,0.0
+Dwarka Expressway,122004,Gurugram,92000,1.35,1,0,DS01,8.43
+Greater Noida West,201318,Gr Noida,95000,1.05,3,0,DS03,6.45
+Sohna Road / SPR,122018,Gurugram,75000,1.25,2,0,DS01,4.32
+Greater Faridabad,121002,Faridabad,82000,1.0,1,0,DS02,17.54
+Noida Sector 150,201310,Noida,52000,1.25,1,0,DS03,14.9
+Raj Nagar Extension,201017,Ghaziabad,60000,1.0,1,0,DS04,8.72
+Noida Sector 137,201305,Noida,50000,1.15,2,0,DS03,13.7
+New Faridabad (Sec 21),121001,Faridabad,55000,1.0,2,0,DS02,17.14
+Greater Noida (Pari Chowk),201310,Gr Noida,50000,1.0,1,0,DS03,21.34
+Golf Course Road,122002,Gurugram,60000,1.4,2,0,DS01,2.05
+South Delhi (GK / CR Park),110019,Delhi,55000,1.4,3,0,DS02,3.73
+Vaishali / Vasundhara,201012,Ghaziabad,60000,1.05,2,0,DS04,2.46
+Yamuna Expressway / Jewar,203135,Gr Noida,32000,0.95,0,0,DS03,39.16
+Manesar (IMT),122051,Gurugram,35000,0.9,0,0,DS01,21.43

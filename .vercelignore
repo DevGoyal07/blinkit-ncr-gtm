@@ -1,0 +1,9 @@
+# Vercel should publish ONLY the dashboard (index.html).
+# Everything below is kept in GitHub but not deployed to the public site.
+*.csv
+*.py
+*.sql
+*.pptx
+case_study.md
+README.md
+blinkit_gtm_dashboard.html

@@ -1,0 +1,7 @@
+store_id,store_area,pincode,lat,lng,launch_date,daily_capacity_orders
+DS01,Gurugram Cyber City,122002,28.4949,77.0895,2022-05-10,1600
+DS02,South Delhi (Saket),110017,28.5245,77.2066,2022-03-01,1500
+DS03,Noida Sector 62,201309,28.6271,77.3716,2022-08-15,1500
+DS04,Indirapuram,201014,28.645,77.37,2023-02-20,1500
+DS05,Dwarka (Delhi),110078,28.5921,77.046,2023-06-05,1500
+DS06,Vasant Kunj,110070,28.52,77.1591,2023-09-12,1400
