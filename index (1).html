@@ -1,0 +1,400 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blinkit · NCR Dark-Store Launch Decision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root{
+    --yellow:#F6CB46; --yellow-d:#E3B526; --yellow-soft:#FDF4D2; --yellow-tint:#FBF7E9;
+    --ink:#20201C; --ink-2:#5C5648; --muted:#8E876F;
+    --green:#2C813A; --green-d:#226630; --amber:#C7791B; --red:#C0392B; --blue:#2F6FB0;
+    --bg:#FAF8F2; --card:#FFFFFF; --line:#ECE6D6; --line-2:#F2EDE0;
+    --sh:0 1px 2px rgba(32,32,28,.04), 0 8px 26px rgba(32,32,28,.06);
+    --sh-sm:0 1px 2px rgba(32,32,28,.05), 0 3px 10px rgba(32,32,28,.05);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Figtree",system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px}
+  h1,h2,h3,.dh{font-family:"Plus Jakarta Sans","Figtree",sans-serif;letter-spacing:-.015em}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+
+  /* header */
+  header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40}
+  .hbar{display:flex;align-items:center;gap:16px;padding:15px 0 14px}
+  .logo{font-family:"Plus Jakarta Sans";font-weight:800;font-size:26px;letter-spacing:-.03em;line-height:1}
+  .logo .b{color:var(--ink)} .logo .it{color:var(--green)}
+  .logo-sub{margin-left:2px;padding-left:14px;border-left:1px solid var(--line);color:var(--muted);font-size:12.5px;font-weight:600}
+  .callwrap{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+  .call{display:flex;align-items:center;gap:11px}
+  .byline{font-size:11.5px;font-weight:600;color:var(--muted)}
+  .byline b{color:var(--ink-2);font-weight:700}
+  .call .lab{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+  .call .pill{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;font-weight:700;font-size:13px;padding:7px 14px;border-radius:8px}
+  .call .pill .d{width:7px;height:7px;border-radius:50%;background:#9FE6AC}
+  .tabs{display:flex;gap:2px;overflow-x:auto}
+  .tab{appearance:none;border:0;background:none;font-family:"Figtree";font-weight:600;font-size:14px;color:var(--muted);
+    padding:13px 16px;cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;transition:.15s}
+  .tab:hover{color:var(--ink-2)} .tab.active{color:var(--ink);border-bottom-color:var(--yellow-d)}
+
+  main{padding:26px 0 70px}
+  .view{display:none;animation:fade .25s ease}.view.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .grid{display:grid;gap:18px}.row2{grid-template-columns:1.6fr 1fr}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--sh)}
+
+  /* hero */
+  .hero{background:var(--yellow);border:1px solid var(--yellow-d);border-radius:18px;padding:30px 32px;position:relative;overflow:hidden;box-shadow:var(--sh)}
+  .hero .ey{display:inline-block;background:rgba(32,32,28,.09);color:var(--ink);font-size:11px;font-weight:800;
+    letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:7px}
+  .hero h1{font-size:31px;font-weight:800;margin:15px 0 12px;line-height:1.14;max-width:20ch}
+  .hero h1 u{text-decoration:none;box-shadow:inset 0 -10px 0 rgba(255,255,255,.55);padding:0 2px}
+  .hero p{font-size:15.5px;color:#473F28;max-width:66ch;margin:0;line-height:1.5;font-weight:500}
+  .hero .wm{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-family:"Plus Jakarta Sans";font-weight:800;
+    font-size:120px;color:rgba(32,32,28,.06);line-height:1;letter-spacing:-.04em;user-select:none}
+
+  /* stat row */
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;box-shadow:var(--sh-sm)}
+  .stat .top{display:flex;align-items:center;gap:7px;margin-bottom:11px}
+  .stat .dot{width:8px;height:8px;border-radius:3px}
+  .stat .k{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .stat .n{font-family:"Plus Jakarta Sans";font-weight:800;font-size:30px;line-height:1}
+  .stat .s{font-size:12.5px;color:var(--ink-2);margin-top:6px;font-weight:500}
+
+  .sech{font-family:"Plus Jakarta Sans";font-weight:700;font-size:16px;margin:0;display:flex;align-items:center;gap:9px}
+  .sech::before{content:"";width:4px;height:16px;border-radius:3px;background:var(--yellow-d)}
+  .secp{font-size:13px;color:var(--ink-2);margin:9px 0 16px;font-weight:500}
+  .chart-box{position:relative;width:100%}
+
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;
+    letter-spacing:.03em;white-space:nowrap;color:#fff;text-transform:uppercase}
+  .b-launch{background:var(--green)}.b-phase{background:var(--amber)}.b-dont{background:var(--red)}.b-dens{background:var(--blue)}
+
+  .ctrl{display:flex;flex-direction:column;gap:15px}
+  .sld label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:7px;color:var(--ink-2)}
+  .sld label b{font-family:"Plus Jakarta Sans";font-weight:700;color:var(--ink)}
+  input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:5px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--ink);border:3px solid var(--yellow);cursor:pointer}
+  input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--ink);border:3px solid var(--yellow);cursor:pointer}
+  .wsum{font-size:12px;color:var(--muted);font-weight:600}
+  .btn{appearance:none;border:1px solid var(--ink);background:var(--card);font-family:"Figtree";font-weight:700;font-size:12.5px;padding:7px 14px;border-radius:8px;cursor:pointer;transition:.13s}
+  .btn:hover{background:var(--ink);color:#fff}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);cursor:pointer;user-select:none;
+    font-weight:700;padding:0 10px 11px;text-align:right;border-bottom:1.5px solid var(--line)}
+  thead th:first-child{text-align:left}thead th:hover{color:var(--ink)}
+  td{padding:10px;text-align:right;border-bottom:1px solid var(--line-2)}td:first-child{text-align:left}
+  tbody tr:hover{background:var(--yellow-tint)}
+  tr.win{background:var(--yellow-tint)}tr.win td:first-child{box-shadow:inset 3px 0 0 var(--green)}
+  .zname{font-weight:700}.zsub{font-size:11px;color:var(--muted);font-weight:500}
+  .opc{font-family:"Plus Jakarta Sans";font-weight:800;font-size:14px}
+
+  .mini{display:flex;flex-direction:column;gap:10px}
+  .mini .r{display:flex;align-items:center;gap:10px;font-size:13.5px}
+  .callout{display:flex;gap:13px;align-items:flex-start;background:var(--yellow-tint);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:12px;padding:16px 18px}
+  .callout .ic{width:34px;height:34px;border-radius:9px;background:var(--blue);display:grid;place-items:center;flex:none}
+  .econ-out{grid-template-columns:repeat(4,1fr);gap:12px}
+  .eo{padding:15px 16px;border-radius:12px;background:var(--yellow-tint);border:1px solid var(--line)}
+  .eo .n{font-family:"Plus Jakarta Sans";font-weight:800;font-size:24px;line-height:1}
+  .eo .k{font-size:11.5px;color:var(--ink-2);margin-top:7px;font-weight:600}
+  .dark{background:var(--ink);color:#fff;border-radius:14px;padding:20px 22px}
+  .dark .sech{color:#fff}.dark .sech::before{background:var(--yellow)}
+  .note{font-size:12.5px;color:var(--ink-2);font-weight:500}
+  .tag{display:inline-block;background:var(--ink);color:#fff;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;letter-spacing:.04em}
+  .foot{font-size:12px;color:var(--muted);text-align:center;padding:26px 10px 0;font-weight:500;border-top:1px solid var(--line);margin-top:30px}
+  @media(max-width:860px){.stats{grid-template-columns:repeat(2,1fr)}.row2,.econ-out{grid-template-columns:1fr}.hero h1{font-size:25px}.hero .wm{display:none}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <span class="logo"><span class="b">blink</span><span class="it">it</span></span>
+      <span class="logo-sub">NCR dark-store launch decision</span>
+      <div class="callwrap">
+        <div class="call"><span class="lab">The call</span><span class="pill"><span class="d"></span>Launch · Dwarka Expressway</span></div>
+        <div class="byline">Prepared by <b>Devansh Goel</b> · <b>Kriti Jasuja</b></div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-v="overview">Overview</button>
+      <button class="tab" data-v="model">Opportunity model</button>
+      <button class="tab" data-v="matrix">Decision matrix</button>
+      <button class="tab" data-v="econ">Unit economics</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- OVERVIEW -->
+  <section class="view active" id="overview">
+    <div class="hero" style="margin-bottom:18px">
+      <span class="wm">it</span>
+      <span class="ey">The recommendation</span>
+      <h1>Open the next NCR store on <u>Dwarka Expressway</u>.</h1>
+      <p>The largest pocket of <b>unmet, high-value</b> demand on Blinkit's NCR frontier — and it beats the bigger-but-cheaper, three-way-contested Greater Noida West on exactly the margin discipline Blinkit's playbook calls for.</p>
+    </div>
+
+    <div class="grid stats" style="margin-bottom:18px">
+      <div class="stat"><div class="top"><span class="dot" style="background:var(--green)"></span><span class="k">Opportunity</span></div><div class="n">95.3</div><div class="s">tops the model · next is 71.0</div></div>
+      <div class="stat"><div class="top"><span class="dot" style="background:var(--red)"></span><span class="k">Demand unserved</span></div><div class="n" style="color:var(--red)">77%</div><div class="s">nearest store ~8.4 km away</div></div>
+      <div class="stat"><div class="top"><span class="dot" style="background:var(--green)"></span><span class="k">Growth · 6 mo</span></div><div class="n" style="color:var(--green)">+76%</div><div class="s">fastest-growing candidate</div></div>
+      <div class="stat"><div class="top"><span class="dot" style="background:var(--yellow-d)"></span><span class="k">Avg order value</span></div><div class="n">₹580</div><div class="s">vs ₹525 network average</div></div>
+    </div>
+
+    <div class="grid row2" style="margin-bottom:18px">
+      <div class="card">
+        <h3 class="sech">Opportunity by corridor</h3>
+        <p class="secp">Weighted model — demand · density · growth · under-service. <span class="badge b-launch">launch</span> <span class="badge b-phase">phase</span> <span class="badge b-dont">don't</span></p>
+        <div class="chart-box" style="height:340px"><canvas id="ovBar"></canvas></div>
+      </div>
+      <div class="grid" style="align-content:start;gap:18px">
+        <div class="card">
+          <h3 class="sech">The four-way call</h3>
+          <div class="mini" style="margin-top:14px">
+            <div class="r"><span class="badge b-launch">launch</span> Dwarka Expressway</div>
+            <div class="r"><span class="badge b-phase">phase</span> Gr Noida West · Sohna · Faridabad</div>
+            <div class="r"><span class="badge b-dens">densify</span> Indirapuram (relief store)</div>
+            <div class="r"><span class="badge b-dont">don't</span> Golf Course Rd · GK/CR · Jewar</div>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M4 9h16M4 15h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div>
+            <h3 class="sech" style="margin-bottom:5px">Densify, don't relaunch: Indirapuram</h3>
+            <p class="note" style="margin:0">Already has a store, but demand outgrew it — <b>11-min</b> deliveries, <b>26% SLA breach</b> vs 7 min elsewhere. The fix is a <b>relief store</b>, on a separate track.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--yellow-tint);padding:16px 20px">
+      <p class="note" style="margin:0"><span class="tag">data note</span> &nbsp;Company facts &amp; all economics are <b>real</b> (Eternal/Blinkit FY26: ~2,243 stores, NCR = largest market, AOV ~₹525, ~₹30/order contribution, EBITDA-positive Q3 FY26, 5–6%-of-NOV target). Pincode-level demand is <b>illustrative</b>, modelled on that footprint — order logs are proprietary.</p>
+    </div>
+  </section>
+
+  <!-- MODEL -->
+  <section class="view" id="model">
+    <div class="grid row2">
+      <div class="card">
+        <h3 class="sech">Live opportunity ranking</h3>
+        <p class="secp">Drag the weights → score, ranking <i>and the call</i> recompute live. This is the model from <span class="tag">analysis.sql</span>, in your browser.</p>
+        <div class="chart-box" style="height:420px"><canvas id="modelBar"></canvas></div>
+      </div>
+      <div class="card">
+        <h3 class="sech">Model weights</h3>
+        <p class="secp">How much each driver counts. They re-normalise to 100%.</p>
+        <div class="ctrl" id="weights">
+          <div class="sld"><label>Demand size <b><span data-w="demand">30</span>%</b></label><input type="range" min="0" max="100" value="30" data-wk="demand"></div>
+          <div class="sld"><label>Demand density <b><span data-w="density">20</span>%</b></label><input type="range" min="0" max="100" value="20" data-wk="density"></div>
+          <div class="sld"><label>Growth <b><span data-w="growth">25</span>%</b></label><input type="range" min="0" max="100" value="25" data-wk="growth"></div>
+          <div class="sld"><label>Under-service <b><span data-w="under">25</span>%</b></label><input type="range" min="0" max="100" value="25" data-wk="under"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span class="wsum" id="wsum">re-normalised to 100%</span><button class="btn" id="resetW">Reset</button></div>
+        </div>
+        <div style="margin-top:16px;padding-top:15px;border-top:1px solid var(--line)">
+          <p class="note" style="margin:0">Two guards override the score: ≥90% already served → <span class="badge b-dont">don't</span> (cannibalisation); under 40k households → <span class="badge b-dont">don't</span> (sub-scale).</p>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <h3 class="sech">All candidate corridors</h3>
+      <p class="secp">Click any column to sort. Updates live with the weights.</p>
+      <div style="overflow-x:auto"><table id="tbl"><thead><tr>
+        <th data-s="name">Corridor</th><th data-s="hh">HH</th><th data-s="unmet">Unmet %</th><th data-s="growth">Growth %</th>
+        <th data-s="aov">AOV ₹</th><th data-s="dist">Dist km</th><th data-s="comp">Comp</th><th data-s="opp">Opp score</th><th data-s="dec">Decision</th>
+      </tr></thead><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- MATRIX -->
+  <section class="view" id="matrix">
+    <div class="grid row2">
+      <div class="card">
+        <h3 class="sech">Dwarka Expressway vs Greater Noida West</h3>
+        <p class="secp">Unmet demand (x) vs basket value (y). Bubble = households. Top-right = big <i>and</i> high-margin. Hover any bubble.</p>
+        <div class="chart-box" style="height:420px"><canvas id="scatter"></canvas></div>
+      </div>
+      <div class="grid" style="align-content:start;gap:18px">
+        <div class="card">
+          <h3 class="sech">The scale-vs-margin call</h3>
+          <p class="note" style="margin:12px 0 13px">A naive "biggest unmet demand" read points at <b>Greater Noida West</b> (95k HH). But:</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+            <div class="eo" style="background:#EEF6EF;border-color:#CDE6D2"><div class="n" style="font-size:21px;color:var(--green)">₹580</div><div class="k">Dwarka · 1 rival</div></div>
+            <div class="eo" style="background:#FAEEEC;border-color:#EDD3CF"><div class="n" style="font-size:21px;color:var(--red)">₹452</div><div class="k">Gr Noida West · 3 rivals</div></div>
+          </div>
+          <p class="note" style="margin:13px 0 0">Entering Greater Noida West now = a <b>three-way price war on a thin basket</b> — against Blinkit's "no growth on discounting." So <span class="badge b-phase">phase</span>, not launch.</p>
+        </div>
+        <div class="dark">
+          <h3 class="sech">The principle</h3>
+          <p style="margin:11px 0 0;font-size:15px;font-weight:600;line-height:1.4;color:#fff">The model finds candidates. Strategy sequences them — toward margin, not volume.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ECON -->
+  <section class="view" id="econ">
+    <div class="grid row2">
+      <div class="card">
+        <h3 class="sech">Break-even &amp; payback</h3>
+        <p class="secp">Cumulative store EBITDA over 18 months on a standard ramp — anchored to Blinkit's real economics. Move the levers.</p>
+        <div class="chart-box" style="height:320px"><canvas id="econChart"></canvas></div>
+        <div class="grid econ-out" style="margin-top:18px">
+          <div class="eo"><div class="n" id="oBE">—</div><div class="k">Break-even orders/day</div></div>
+          <div class="eo"><div class="n" id="oPos">—</div><div class="k">EBITDA-positive by</div></div>
+          <div class="eo"><div class="n" id="oPay">—</div><div class="k">Fit-out payback</div></div>
+          <div class="eo"><div class="n" id="oMat">—</div><div class="k">Mature monthly EBITDA</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="sech">Levers</h3>
+        <p class="secp">Defaults = the Dwarka Expressway case.</p>
+        <div class="ctrl" id="econControls">
+          <div class="sld"><label>AOV <b>₹<span data-e="aov">560</span></b></label><input type="range" min="400" max="800" step="10" value="560" data-ek="aov"></div>
+          <div class="sld"><label>Contribution / order <b>₹<span data-e="cm">45</span></b></label><input type="range" min="20" max="80" step="1" value="45" data-ek="cm"></div>
+          <div class="sld"><label>Fixed opex / mo <b>₹<span data-e="fx">11.0</span> L</b></label><input type="range" min="6" max="18" step="0.5" value="11" data-ek="fx"></div>
+          <div class="sld"><label>Fit-out capex <b>₹<span data-e="cx">65</span> L</b></label><input type="range" min="40" max="120" step="5" value="65" data-ek="cx"></div>
+          <div class="sld"><label>Mature orders / day <b><span data-e="mo">1300</span></b></label><input type="range" min="600" max="1800" step="50" value="1300" data-ek="mo"></div>
+          <button class="btn" id="resetE" style="margin-top:2px">Reset to base case</button>
+        </div>
+        <p class="note" style="margin-top:15px;padding-top:13px;border-top:1px solid var(--line)">Blinkit's blended contribution is ~₹30/order today; mature NCR is guided to <b>5–6% of NOV</b>. A premium corridor runs ahead — modelled at ₹45.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">Illustrative demand modelled on Blinkit's public footprint · economics from Eternal/Blinkit FY26 reporting · a product-management portfolio case study</div>
+</main>
+
+<script>
+const C=[
+ {name:"Dwarka Expressway",zone:"Gurugram · New Ggn",hh:92000,comp:1,dist:8.43,unmet:77.0,capture:23.0,growth:75.5,aov:580,att:15660,den:170.2},
+ {name:"Sohna Road / SPR",zone:"Gurugram",hh:75000,comp:2,dist:4.32,unmet:41.1,capture:58.9,growth:67.5,aov:540,att:11573,den:154.3},
+ {name:"Greater Noida West",zone:"Greater Noida",hh:95000,comp:3,dist:6.45,unmet:77.0,capture:23.0,growth:64.2,aov:452,att:9851,den:103.7},
+ {name:"Noida Sector 150",zone:"Noida",hh:52000,comp:1,dist:14.90,unmet:77.4,capture:22.6,growth:53.2,aov:538,att:6254,den:120.3},
+ {name:"Greater Faridabad",zone:"Faridabad",hh:82000,comp:1,dist:17.54,unmet:76.4,capture:23.6,growth:54.5,aov:430,att:7525,den:91.8},
+ {name:"Noida Sector 137",zone:"Noida",hh:50000,comp:2,dist:13.70,unmet:77.4,capture:22.6,growth:44.1,aov:494,att:5391,den:107.8},
+ {name:"Raj Nagar Extension",zone:"Ghaziabad",hh:60000,comp:1,dist:8.72,unmet:94.7,capture:5.3,growth:42.1,aov:431,att:4846,den:80.8},
+ {name:"Yamuna Expwy / Jewar",zone:"Greater Noida",hh:32000,comp:0,dist:39.16,unmet:79.2,capture:20.8,growth:56.2,aov:407,att:1714,den:53.6},
+ {name:"New Faridabad (Sec 21)",zone:"Faridabad",hh:55000,comp:2,dist:17.14,unmet:76.9,capture:23.1,growth:29.0,aov:429,att:4214,den:76.6},
+ {name:"Gr. Noida (Pari Chowk)",zone:"Greater Noida",hh:50000,comp:1,dist:21.34,unmet:77.6,capture:22.4,growth:26.7,aov:434,att:3493,den:69.9},
+ {name:"Manesar (IMT)",zone:"Gurugram",hh:35000,comp:0,dist:21.43,unmet:77.3,capture:22.7,growth:26.8,aov:388,att:1880,den:53.7},
+ {name:"Golf Course Road",zone:"Gurugram",hh:60000,comp:2,dist:2.05,unmet:0.8,capture:99.2,growth:18.6,aov:601,att:9852,den:164.2},
+ {name:"Vaishali / Vasundhara",zone:"Ghaziabad",hh:60000,comp:2,dist:2.46,unmet:16.6,capture:83.4,growth:25.5,aov:454,att:6829,den:113.8},
+ {name:"South Delhi (GK/CR Park)",zone:"Delhi",hh:55000,comp:3,dist:3.73,unmet:8.2,capture:91.8,growth:11.8,aov:601,att:8411,den:152.9},
+];
+const INK="#20201C",YEL="#F6CB46",YELD="#E3B526",GREEN="#2C813A",AMBER="#C7791B",RED="#C0392B",MUT="#8E876F",GRID="rgba(32,32,28,.08)";
+const DEC={launch:GREEN,phase:AMBER,dont:RED};
+const BAR={launch:YEL,phase:AMBER,dont:RED};
+Chart.defaults.font.family="Figtree, sans-serif"; Chart.defaults.color=MUT;
+const TT={backgroundColor:INK,padding:10,cornerRadius:8,titleFont:{weight:"700"},displayColors:false};
+
+function mm(a){const mn=Math.min(...a),mx=Math.max(...a);return v=>mx===mn?0:(v-mn)/(mx-mn);}
+function scored(W){
+ const s=W.demand+W.density+W.growth+W.under||1;
+ const w={demand:W.demand/s,density:W.density/s,growth:W.growth/s,under:W.under/s};
+ const nd=mm(C.map(c=>c.att)),nden=mm(C.map(c=>c.den)),ng=mm(C.map(c=>c.growth)),nu=mm(C.map(c=>c.unmet));
+ return C.map(c=>{const opp=100*(w.demand*nd(c.att)+w.density*nden(c.den)+w.growth*ng(c.growth)+w.under*nu(c.unmet));
+   let dec="phase"; if(c.hh<40000)dec="dont"; else if(c.capture>=90)dec="dont"; else if(opp>=80)dec="launch";
+   return {...c,opp,dec};});
+}
+const W={demand:30,density:20,growth:25,under:25};
+
+let ovChart;
+function overviewBar(){
+ const d=scored(W).sort((a,b)=>b.opp-a.opp).slice(0,7);
+ const cfg={type:"bar",data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>+x.opp.toFixed(1)),
+   backgroundColor:d.map(x=>BAR[x.dec]),borderColor:d.map(x=>x.dec==="launch"?INK:"transparent"),
+   borderWidth:d.map(x=>x.dec==="launch"?1.5:0),borderRadius:5,barPercentage:.78}]},
+  options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+   plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>"Opportunity "+c.parsed.x.toFixed(1)}}},
+   scales:{x:{beginAtZero:true,max:100,grid:{color:GRID},border:{display:false}},
+           y:{grid:{display:false},border:{display:false},ticks:{color:INK,font:{size:12,weight:"600"}}}}}};
+ if(ovChart){ovChart.data=cfg.data;ovChart.update()}else ovChart=new Chart(document.getElementById("ovBar"),cfg);
+}
+let modelChart,sortKey="opp",sortDir=-1;
+function render(){
+ const data=scored(W); const d=[...data].sort((a,b)=>b.opp-a.opp);
+ const cfg={type:"bar",data:{labels:d.map(x=>x.name),datasets:[{data:d.map(x=>+x.opp.toFixed(1)),
+   backgroundColor:d.map(x=>BAR[x.dec]),borderColor:d.map(x=>x.dec==="launch"?INK:"transparent"),
+   borderWidth:d.map(x=>x.dec==="launch"?1.5:0),borderRadius:5,barPercentage:.8}]},
+  options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,animation:{duration:330},
+   plugins:{legend:{display:false},tooltip:{...TT,callbacks:{title:c=>c[0].label,
+     label:c=>["Opportunity "+c.parsed.x.toFixed(1),"Decision: "+d[c.dataIndex].dec.toUpperCase()]}}},
+   scales:{x:{beginAtZero:true,max:100,grid:{color:GRID},border:{display:false},title:{display:true,text:"Opportunity score /100",color:MUT,font:{size:11,weight:"600"}}},
+           y:{grid:{display:false},border:{display:false},ticks:{color:INK,font:{size:11.5,weight:"600"}}}}}};
+ if(modelChart){modelChart.data=cfg.data;modelChart.update()}else modelChart=new Chart(document.getElementById("modelBar"),cfg);
+ const tb=document.querySelector("#tbl tbody");
+ const sorted=[...data].sort((a,b)=>{let av=a[sortKey],bv=b[sortKey];
+   if(sortKey==="dec"){const o={launch:0,phase:1,dont:2};av=o[a.dec];bv=o[b.dec];}
+   if(typeof av==="string")return sortDir*av.localeCompare(bv);return sortDir*(av-bv);});
+ const bm={launch:"b-launch",phase:"b-phase",dont:"b-dont"},dl={launch:"LAUNCH",phase:"PHASE",dont:"DON'T"};
+ tb.innerHTML=sorted.map(c=>`<tr class="${c.dec==='launch'?'win':''}">
+  <td><div class="zname">${c.name}</div><div class="zsub">${c.zone}</div></td>
+  <td>${(c.hh/1000).toFixed(0)}k</td><td>${c.unmet.toFixed(0)}%</td><td>${c.growth.toFixed(0)}%</td>
+  <td>₹${c.aov}</td><td>${c.dist.toFixed(1)}</td><td>${c.comp}</td>
+  <td class="opc">${c.opp.toFixed(1)}</td><td><span class="badge ${bm[c.dec]}">${dl[c.dec]}</span></td></tr>`).join("");
+ overviewBar();
+}
+document.querySelectorAll('[data-wk]').forEach(s=>s.addEventListener("input",()=>{
+ W[s.dataset.wk]=+s.value;document.querySelector(`[data-w="${s.dataset.wk}"]`).textContent=s.value;render();}));
+document.getElementById("resetW").onclick=()=>{const def={demand:30,density:20,growth:25,under:25};
+ document.querySelectorAll('[data-wk]').forEach(s=>{s.value=def[s.dataset.wk];W[s.dataset.wk]=def[s.dataset.wk];
+  document.querySelector(`[data-w="${s.dataset.wk}"]`).textContent=def[s.dataset.wk];});render();};
+document.querySelectorAll("#tbl th").forEach(th=>th.onclick=()=>{const k=th.dataset.s;
+ if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==="name")?1:-1;}render();});
+
+const quadPlugin={id:"quad",beforeDraw(ch){const{ctx,chartArea:a,scales}=ch;if(!a)return;
+ const mx=scales.x.getPixelForValue(6000),my=scales.y.getPixelForValue(500);
+ ctx.save();ctx.strokeStyle="rgba(32,32,28,.18)";ctx.setLineDash([4,4]);ctx.lineWidth=1;
+ ctx.beginPath();ctx.moveTo(mx,a.top);ctx.lineTo(mx,a.bottom);ctx.moveTo(a.left,my);ctx.lineTo(a.right,my);ctx.stroke();
+ ctx.setLineDash([]);ctx.fillStyle="rgba(44,129,58,.55)";ctx.font="700 11px Figtree";ctx.textAlign="right";
+ ctx.fillText("big + high-value",a.right-8,a.top+15);ctx.restore();}};
+function buildScatter(){
+ const data=scored(W);
+ const ds=["launch","phase","dont"].map(dec=>({label:dec.toUpperCase(),
+   data:data.filter(c=>c.dec===dec).map(c=>({x:Math.round(c.att*c.unmet/100),y:c.aov,r:Math.sqrt(c.hh)/26,name:c.name,hh:c.hh})),
+   backgroundColor:dec==="launch"?"rgba(246,203,70,.92)":dec==="phase"?"rgba(199,121,27,.45)":"rgba(192,57,43,.42)",
+   borderColor:dec==="launch"?INK:DEC[dec],borderWidth:dec==="launch"?2:1.3}));
+ new Chart(document.getElementById("scatter"),{type:"bubble",data:{datasets:ds},plugins:[quadPlugin],
+  options:{responsive:true,maintainAspectRatio:false,
+   plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:7,font:{size:11.5,weight:"600"},color:INK}},
+    tooltip:{...TT,callbacks:{label:c=>{const p=c.raw;return[p.name,"Unmet ~"+p.x.toLocaleString()+"/qtr","AOV ₹"+p.y,"HH "+(p.hh/1000).toFixed(0)+"k"];}}}},
+   scales:{x:{title:{display:true,text:"Unmet demand (orders / quarter)",color:MUT,font:{size:11.5,weight:"600"}},grid:{color:GRID},border:{display:false}},
+           y:{title:{display:true,text:"Average order value (₹)",color:MUT,font:{size:11.5,weight:"600"}},grid:{color:GRID},border:{display:false}}}}});
+}
+const RAMP=[.35,.54,.65,.77,.88,.96,1,1,1,1,1,1,1,1,1,1,1,1];
+let econChart;const E={aov:560,cm:45,fx:11,cx:65,mo:1300};
+function fmtCr(L){return L>=100?"₹"+(L/100).toFixed(2)+" Cr":"₹"+L.toFixed(1)+" L";}
+function econ(){
+ const fx=E.fx*1e5,cx=E.cx*1e5,be=Math.round(fx/(E.cm*30));
+ let cum=0,posM=null,payM=null;const arr=[];
+ for(let m=0;m<18;m++){const opd=RAMP[m]*E.mo,eb=opd*30*E.cm-fx;
+   if(posM===null&&eb>0)posM=m+1;cum+=eb;arr.push(Math.round(cum/1e5));if(payM===null&&cum>=cx)payM=m+1;}
+ const matEB=E.mo*30*E.cm-fx;
+ oBE.textContent=be.toLocaleString();oPos.textContent=posM?("Month "+posM):"—";
+ oPay.textContent=payM?("Month "+payM):">18 mo";oMat.textContent=fmtCr(matEB/1e5);
+ const cfg={type:"line",data:{labels:[...Array(18)].map((_,i)=>"M"+(i+1)),
+   datasets:[{label:"Cumulative EBITDA (₹L)",data:arr,borderColor:INK,backgroundColor:"rgba(246,203,70,.35)",fill:true,tension:.25,pointRadius:0,borderWidth:2.5},
+    {label:"Fit-out capex",data:arr.map(()=>E.cx),borderColor:RED,borderDash:[6,4],borderWidth:1.5,pointRadius:0}]},
+  options:{responsive:true,maintainAspectRatio:false,animation:{duration:280},
+   plugins:{legend:{position:"bottom",labels:{usePointStyle:true,boxWidth:7,font:{size:11,weight:"600"},color:INK}},
+     tooltip:{...TT,callbacks:{label:c=>c.dataset.label+": ₹"+c.parsed.y+" L"}}},
+   scales:{x:{grid:{display:false},border:{display:false},ticks:{maxRotation:0,autoSkip:true,font:{size:10}}},
+           y:{grid:{color:GRID},border:{display:false},title:{display:true,text:"₹ lakh",color:MUT,font:{size:11,weight:"600"}}}}}};
+ if(econChart){econChart.data=cfg.data;econChart.update()}else econChart=new Chart(document.getElementById("econChart"),cfg);
+}
+document.querySelectorAll('[data-ek]').forEach(s=>s.addEventListener("input",()=>{E[s.dataset.ek]=+s.value;
+ const sp=document.querySelector(`[data-e="${s.dataset.ek}"]`);sp.textContent=(s.dataset.ek==="fx")?(+s.value).toFixed(1):s.value;econ();}));
+document.getElementById("resetE").onclick=()=>{const def={aov:560,cm:45,fx:11,cx:65,mo:1300};
+ document.querySelectorAll('[data-ek]').forEach(s=>{s.value=def[s.dataset.ek];E[s.dataset.ek]=def[s.dataset.ek];
+  const sp=document.querySelector(`[data-e="${s.dataset.ek}"]`);sp.textContent=(s.dataset.ek==="fx")?def.fx.toFixed(1):def[s.dataset.ek];});econ();};
+let scatterBuilt=false;
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+ t.classList.add("active");document.getElementById(t.dataset.v).classList.add("active");
+ if(t.dataset.v==="matrix"&&!scatterBuilt){buildScatter();scatterBuilt=true;}});
+render();econ();
+</script>
